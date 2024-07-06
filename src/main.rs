@@ -24,6 +24,9 @@ fn main() -> Result<()> {
             .join(command.strip_prefix("/").unwrap_or(command)),
     )?;
     chroot(temp_directory.path())?;
+    unsafe {
+        libc::unshare(libc::CLONE_NEWPID);
+    }
 
     let output = std::process::Command::new(command)
         .args(command_args)
